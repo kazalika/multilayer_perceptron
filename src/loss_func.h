@@ -3,6 +3,8 @@
 #include <cassert>
 #include <functional>
 
+namespace mlp {
+
 using Matrix = std::vector<std::vector<double>>;
 using Vector = std::vector<double>;
 
@@ -32,3 +34,5 @@ private:
     std::function<double(double, double)> _loss;
     std::function<double(double, double)> _loss_derivative;
 };
+
+} // namespace mlp

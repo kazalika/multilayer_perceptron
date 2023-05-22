@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <cassert>
 
+namespace mlp {
+
 using Matrix = std::vector<std::vector<double>>;
 using Vector = std::vector<double>;
 
@@ -40,3 +42,5 @@ private:
     Matrix _A;
     Vector _b;
 };
+
+} // namespace mlp

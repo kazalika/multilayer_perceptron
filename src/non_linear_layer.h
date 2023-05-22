@@ -2,6 +2,8 @@
 #include <vector>
 #include <stdio.h>
 
+namespace mlp {
+
 using Matrix = std::vector<std::vector<double>>;
 using Vector = std::vector<double>;
 
@@ -37,3 +39,5 @@ public:
 private:
     ActivationFunction _activation_func;
 };
+
+} // namespace mlp

@@ -1,4 +1,6 @@
-#include "mlp.h"
+#include "../include/mlp/mlp.h"
+
+namespace mlp {
 
 MultilayerPerceptron::MultilayerPerceptron(const std::initializer_list<size_t>& dimensions, const std::initializer_list<ActivationFunction>& act_funcs, LossFunction loss_func) {
     assert(dimensions.size() > 1);
@@ -83,3 +85,5 @@ void MultilayerPerceptron::MultilayerPerceptron::Train(const DataSet& input, con
         UpdateParameters();
     }
 }
+
+} // namespace mlp

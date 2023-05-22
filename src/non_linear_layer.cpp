@@ -1,5 +1,7 @@
 #include "non_linear_layer.h"
 
+namespace mlp {
+
 // begin -- Non Linear Layer
 
 Vector NonLinearLayer::Calculate(const Vector& x) const {
@@ -19,3 +21,5 @@ Vector NonLinearLayer::ThrowDerivative(const Vector& u) const {
 }
 
 // end -- Non Linear Layer
+
+} // namespace mlp

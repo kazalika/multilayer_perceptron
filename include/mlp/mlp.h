@@ -1,9 +1,13 @@
 #include <initializer_list>
 
-#include "linear_layer.h"
-#include "non_linear_layer.h"
-#include "loss_func.h"
+#include "../../src/linear_layer.h"
+#include "../../src/non_linear_layer.h"
+#include "../../src/loss_func.h"
 
+namespace mlp {
+
+using Matrix = std::vector<std::vector<double>>;
+using Vector = std::vector<double>;
 
 class MultilayerPerceptron {
 public:
@@ -31,3 +35,5 @@ private:
 
     size_t batch_size = 10;
 };
+
+} // namespace mlp

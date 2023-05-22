@@ -1,5 +1,7 @@
 #include "linear_layer.h"
 
+namespace mlp {
+
 // begin -- Delta Linear Layer
 
 DeltaLinearLayer::DeltaLinearLayer(size_t input_size, size_t output_size) {
@@ -91,3 +93,5 @@ void LinearLayer::UpdateParameters(const DeltaLinearLayer& delta) {
 }
 
 // end -- Linear Layer
+
+} // namespace mlp
