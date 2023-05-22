@@ -1,32 +1,13 @@
-# Prerequisites
-*.d
+# Build folders
+build*/
+_build*/
+cmake-build*/
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# CMake
+CMakeUserPresets.json
 
-# Precompiled Headers
-*.gch
-*.pch
+# IDEs
+.idea/
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+# Mac
+.DS_Store
