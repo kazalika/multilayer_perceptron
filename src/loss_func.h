@@ -1,38 +1,93 @@
+#include <Eigen/Core>
+#include <Eigen/Dense>
+
 #include <stdio.h>
-#include <vector>
 #include <cassert>
 #include <functional>
+#include <vector>
 
 namespace mlp {
 
-using Matrix = std::vector<std::vector<double>>;
-using Vector = std::vector<double>;
+using Matrix = Eigen::MatrixXd;
+using Vector = Eigen::VectorXd;
+
+using LFunction = std::function<double(const Vector& x, const Vector& y)>;
+using LDerivative = std::function<Vector(const Vector& x, const Vector& y)>;
+
+namespace loss_functions {
+
+double square_loss(const Vector& x, const Vector& y);
+Vector square_loss_der(const Vector& x, const Vector& y);
+
+}  // namespace loss_functions
 
 class LossFunction {
-public:
-    double CalculateLoss(const Vector& x, const Vector& y) const {
-        assert(x.size() == y.size());
+ public:
+  LossFunction()
+      : _loss(loss_functions::square_loss),
+        _loss_derivative(loss_functions::square_loss_der),
+        _name("square") {}
 
-        double result = 0;
-        for (size_t i = 0; i < x.size(); ++i) {
-            result += _loss(x[i], y[i]);
-        }
-        return result;
-    }
+  LossFunction(const LFunction& func, const LDerivative& der,
+               const std::string& name)
+      : _loss(func), _loss_derivative(der), _name(name) {}
 
-    Vector GetDerivative(const Vector& x, const Vector& y) const {
-        assert(x.size() == y.size());
+  double CalculateLoss(const Vector& x, const Vector& y) const {
+    assert(x.size() == y.size());
 
-        Vector u(x.size());
-        for (size_t i = 0; i < x.size(); ++i) {
-            u[i] = _loss_derivative(x[i], y[i]);
-        }
-        return u;
-    }
+    double result = _loss(x, y);
+    return result;
+  }
 
-private:
-    std::function<double(double, double)> _loss;
-    std::function<double(double, double)> _loss_derivative;
+  Vector GetDerivative(const Vector& x, const Vector& y) const {
+    assert(x.size() == y.size());
+
+    Vector u = _loss_derivative(x, y);
+    return u;
+  }
+
+  std::string GetName() const { return _name; }
+
+ private:
+  std::function<double(const Vector&, const Vector&)> _loss;
+  std::function<Vector(const Vector&, const Vector&)> _loss_derivative;
+  std::string _name;
 };
 
-} // namespace mlp
+class LossFunctionsList {
+ public:
+  LossFunctionsList() {
+    _functions_list = {{loss_functions::square_loss,
+                        loss_functions::square_loss_der, "square"}};
+  }
+
+  void Clear() {
+    _functions_list = {{loss_functions::square_loss,
+                        loss_functions::square_loss_der, "square"}};
+  }
+
+  void InsertFunction(const LFunction& func, const LDerivative& der,
+                      const std::string& name) {
+    _functions_list.emplace_back(func, der, name);
+  }
+
+  LossFunction GetByName(const std::string& name) const {
+    for (const auto& f : _functions_list) {
+      if (f.GetName() == name) {
+        return f;
+      }
+    }
+
+    // didn't found function :(  => return square
+    return _functions_list[0];
+  }
+
+ private:
+  std::vector<LossFunction> _functions_list;
+};
+
+void WriteLossFunction(std::ostream& out, const LossFunction& f);
+
+LossFunction ReadLossFunction(std::istream& in, const LossFunctionsList& list);
+
+}  // namespace mlp

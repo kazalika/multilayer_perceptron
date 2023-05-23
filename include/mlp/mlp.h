@@ -1,39 +1,55 @@
+#include <stdio.h>
+#include <cassert>
 #include <initializer_list>
+#include <vector>
 
-#include "../../src/linear_layer.h"
-#include "../../src/non_linear_layer.h"
-#include "../../src/loss_func.h"
+#include "../src/linear_layer.h"
+#include "../src/loss_func.h"
+#include "../src/non_linear_layer.h"
 
 namespace mlp {
 
-using Matrix = std::vector<std::vector<double>>;
-using Vector = std::vector<double>;
+using Matrix = Eigen::MatrixXd;
+using Vector = Eigen::VectorXd;
+using DataSet = std::vector<std::vector<double>>;
 
 class MultilayerPerceptron {
-public:
-    MultilayerPerceptron(const std::initializer_list<size_t>& dimensions, const std::initializer_list<ActivationFunction>& act_funcs, LossFunction loss_func);
+ public:
+  MultilayerPerceptron() = default;
 
-    Vector Calculate(const Vector& input) const;
+  MultilayerPerceptron(
+      const std::initializer_list<ssize_t>& dimensions,
+      const std::initializer_list<ActivationFunction>& act_funcs,
+      LossFunction loss_func);
 
-    void TrainOnOneSample(const Vector& input, const Vector& output);
+  Vector Calculate(const Vector& input) const;
 
-    void UpdateParameters();
+  void TrainOnOneSample(const Vector& input, const Vector& output);
 
-    using DataSet = std::vector<Vector>;
+  void UpdateParameters();
 
-    void Train(const DataSet& input, const DataSet& output);
+  void Train(size_t num_of_iterations, const DataSet& input,
+             const DataSet& output);
 
-private:
-    size_t _m_num_of_layers;
-    size_t _m_input_size;
-    size_t _m_output_size;
-    std::vector<LinearLayer> _m_linear_layers;
-    std::vector<DeltaLinearLayer> _m_delta_linear_layers;
-    std::vector<NonLinearLayer> _m_non_linear_layers;
+  void SaveModel(const std::string& file_path) const;
 
-    LossFunction _m_loss;
+  void LoadModel(const std::string& file_path,
+                 const ActivationFunctionsList& act_list,
+                 const LossFunctionsList& los_list);
 
-    size_t batch_size = 10;
+ private:
+  size_t _m_num_of_layers;
+  ssize_t _m_input_size;
+  ssize_t _m_output_size;
+  std::vector<LinearLayer> _m_linear_layers;
+  std::vector<DeltaLinearLayer> _m_delta_linear_layers;
+  std::vector<NonLinearLayer> _m_non_linear_layers;
+
+  LossFunction _m_loss;
+
+  size_t batch_size = 200;
 };
 
-} // namespace mlp
+Vector to_Vector(const std::vector<double>& v);
+
+}  // namespace mlp
