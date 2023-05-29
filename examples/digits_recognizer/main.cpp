@@ -152,6 +152,8 @@ int main() {
       "/home/kazalika/multilayer_perceptron/examples/digits_recognizer/data/"
       "t10k-labels.idx1-ubyte");
 
+  std::cout << "Training started" << std::endl;
+
   model.Train(5, X_train, Y_train);
 
   std::cout << "Trained!" << std::endl;
