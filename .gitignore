@@ -13,4 +13,4 @@ CMakeUserPresets.json
 .DS_Store
 
 # cache
-.cache
+.cache/
